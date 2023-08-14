@@ -1,0 +1,8 @@
+type Pointer = u64
+
+add: func(a: u32, b: u32) -> u32
+subtract: func(a: u32, b: u32) -> u32
+
+avformat-alloc-context: func() -> Pointer
+avformat-get-context: func(avformat-context: Pointer) -> u64
+avformat-open-input: func(avformat-context: Pointer, filename: string) -> u32

@@ -4,5 +4,10 @@ add: func(a: u32, b: u32) -> u32
 subtract: func(a: u32, b: u32) -> u32
 
 avformat-alloc-context: func() -> Pointer
+avformat-free-context: func(avformat-context: Pointer) -> unit
 avformat-get-context: func(avformat-context: Pointer) -> u64
 avformat-open-input: func(avformat-context: Pointer, filename: string) -> u32
+avformat-find-stream-info: func(avformat-context: Pointer) -> u32
+avformat-get-nb-streams: func(avformat-context: Pointer) -> u32
+avformat-get-stream: func(avformat-context: Pointer, index: u32) -> Pointer
+avformat-alloc-output-context2: func(avformat-context: Pointer, filename: string) -> u32

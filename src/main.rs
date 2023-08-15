@@ -1,17 +1,19 @@
-use wasmedge_ffmpeg_sdk::{add, subtract, AvFormat};
+use wasmedge_ffmpeg_sdk::*;
 
 fn main() {
-    let two = add(1u32, 1u32);
-    println!("two: {two}");
+    let mut input_context = AvFormatContext::new();
+    let mut output_context = AvFormatContext::new();
 
-    let zero = subtract(1u32, 1u32);
-    println!("zero: {zero}");
+    avformat_open_input(&mut input_context, "./small_bunny_1080p_60fps.mp4").unwrap();
+    avformat_find_stream_info(&mut input_context).unwrap();
+    avformat_alloc_output_context2(&mut output_context, "./small_bunny_1080p_60fps.ts").unwrap();
 
-    let context_ptr = AvFormat::alloc_context();
-    println!("context ptr: {}", context_ptr);
+    let nb_streams = input_context.nb_streams();
+    println!("{}", nb_streams);
 
-    let res = AvFormat::get_context(context_ptr);
-    println!("context res: {}", res);
-
-    // let open = AvFormat::open_input(context, "../small_bunny_1080p_60fps.mp4");
+    // let mut streams_list: Vec<i64> = vec![0; nb_streams as usize];
+    // for i in 0..streams_list.len() {
+    //     let in_stream = input_context.streams(i);
+    //     streams_list[i] = -1;
+    // }
 }

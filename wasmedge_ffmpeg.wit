@@ -1,8 +1,5 @@
 type Pointer = u64
 
-add: func(a: u32, b: u32) -> u32
-subtract: func(a: u32, b: u32) -> u32
-
 avformat-alloc-context: func() -> Pointer
 avformat-free-context: func(avformat-context: Pointer) -> unit
 avformat-get-context: func(avformat-context: Pointer) -> u64
@@ -10,4 +7,15 @@ avformat-open-input: func(avformat-context: Pointer, filename: string) -> u32
 avformat-find-stream-info: func(avformat-context: Pointer) -> u32
 avformat-get-nb-streams: func(avformat-context: Pointer) -> u32
 avformat-get-stream: func(avformat-context: Pointer, index: u32) -> Pointer
-avformat-alloc-output-context2: func(avformat-context: Pointer, filename: string) -> u32
+avformat-alloc-output-context2: func(avformat-context: Pointer, filename: string) -> Pointer
+avformat-new-stream: func(avformat-context: Pointer) -> Pointer
+avformat-write-header: func(avformat-context: Pointer) -> u32
+
+avstream-codecpar: func(avstream: Pointer) -> Pointer
+
+avcodec-params-codec-type: func(avcodec-param: Pointer) -> u32
+avcodec-params-copy: func(dst: Pointer, src: Pointer) -> u32
+
+av-dump-format: func(avformat-context: Pointer, index: u32, filename: string, is-output: u32) -> unit
+
+avio-open: func(avformat-context: Pointer, filename: string) -> u32

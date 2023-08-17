@@ -6,6 +6,37 @@ use anyhow;
 
 pub type Pointer = generated::Pointer;
 
+pub fn av_read_frame(
+    avformat_context: &AvFormatContext,
+    avpacket: &AvPacket,
+) -> anyhow::Result<()> {
+    let ret = unsafe { generated::av_read_frame(avformat_context.as_ptr(), avpacket.as_ptr()) };
+    if ret != 0 {
+        return Err(anyhow::anyhow!("ERROR av read frame"));
+    }
+    Ok(())
+}
+
+pub fn av_packet_unref(avpacket: &AvPacket) {
+    unsafe { generated::av_packet_unref(avpacket.as_ptr()) }
+}
+
+pub fn copy_packet(
+    input_context: &AvFormatContext,
+    output_context: &AvFormatContext,
+    avpacket: &AvPacket,
+    streams_list_index: usize,
+) {
+    unsafe {
+        generated::copy_packet(
+            input_context.as_ptr(),
+            output_context.as_ptr(),
+            avpacket.as_ptr(),
+            streams_list_index as u32,
+        )
+    }
+}
+
 pub fn avformat_new_stream(avformat_context: &mut AvFormatContext) -> anyhow::Result<AvStream> {
     let ptr = unsafe { generated::avformat_new_stream(avformat_context.as_ptr()) };
     if ptr == 0u64 {
@@ -204,4 +235,24 @@ pub enum AvMediaType {
     SUBTITLE,
     ATTACHMENT,
     NB,
+}
+
+pub struct AvPacket {
+    ptr: Pointer,
+}
+
+impl AvPacket {
+    pub fn new() -> Self {
+        Self {
+            ptr: unsafe { generated::av_packet() },
+        }
+    }
+
+    pub fn as_ptr(&self) -> Pointer {
+        self.ptr
+    }
+
+    pub fn stream_index(&self) -> usize {
+        unsafe { generated::av_packet_stream_index(self.ptr) as usize }
+    }
 }

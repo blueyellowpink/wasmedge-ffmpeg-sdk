@@ -37,4 +37,28 @@ fn main() {
     av_dump_format(&output_context, 0, out_filename, true);
     avio_open(&output_context, out_filename).unwrap();
     avformat_write_header(&mut output_context).unwrap();
+
+    let packet = AvPacket::new();
+    // loop {
+
+    for _ in 0..10 {
+        if av_read_frame(&input_context, &packet).is_err() {
+            println!("ERROR read frame");
+        }
+        let packet_stream_index = packet.stream_index();
+        if packet_stream_index >= nb_streams as usize || streams_list[packet_stream_index] < 0 {
+            av_packet_unref(&packet);
+            continue;
+        }
+        copy_packet(
+            &input_context,
+            &output_context,
+            &packet,
+            streams_list[packet_stream_index] as usize,
+        );
+
+        av_packet_unref(&packet);
+    }
+
+    // }
 }

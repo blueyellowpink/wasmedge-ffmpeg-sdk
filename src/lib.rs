@@ -17,6 +17,27 @@ pub fn av_read_frame(
     Ok(())
 }
 
+pub fn av_interleaved_write_frame(
+    avformat_context: &AvFormatContext,
+    avpacket: &AvPacket,
+) -> anyhow::Result<()> {
+    let ret = unsafe {
+        generated::av_interleaved_write_frame(avformat_context.as_ptr(), avpacket.as_ptr())
+    };
+    if ret != 0 {
+        return Err(anyhow::anyhow!("ERROR av interleaved write frame"));
+    }
+    Ok(())
+}
+
+pub fn av_write_trailer(avformat_context: &AvFormatContext) -> anyhow::Result<()> {
+    let ret = unsafe { generated::av_write_trailer(avformat_context.as_ptr()) };
+    if ret != 0 {
+        return Err(anyhow::anyhow!("ERROR av write trailer"));
+    }
+    Ok(())
+}
+
 pub fn av_packet_unref(avpacket: &AvPacket) {
     unsafe { generated::av_packet_unref(avpacket.as_ptr()) }
 }
@@ -62,6 +83,10 @@ pub fn avformat_open_input(
     }
 }
 
+pub fn avformat_close_input(avformat_context: &AvFormatContext) {
+    unsafe { generated::avformat_close_input(avformat_context.as_ptr()) }
+}
+
 pub fn avformat_find_stream_info(avformat_context: &mut AvFormatContext) -> anyhow::Result<()> {
     unsafe {
         let ret = generated::avformat_find_stream_info(avformat_context.as_ptr());
@@ -87,6 +112,10 @@ pub fn avformat_alloc_output_context2(
         return Err(anyhow::anyhow!("ERROR alloc output context2"));
     }
     Ok(AvFormatContext { ptr: ret })
+}
+
+pub fn avformat_free_context(avformat_context: &AvFormatContext) -> () {
+    unsafe { generated::avformat_free_context(avformat_context.as_ptr()) }
 }
 
 pub fn avformat_write_header(avformat_context: &mut AvFormatContext) -> anyhow::Result<()> {
@@ -136,6 +165,10 @@ pub fn avio_open(avformat_context: &AvFormatContext, file_name: &str) -> anyhow:
     Ok(())
 }
 
+pub fn avio_closep(avformat_context: &AvFormatContext) {
+    unsafe { generated::avio_closep(avformat_context.as_ptr()) }
+}
+
 pub struct AvFormatContext {
     ptr: Pointer,
 }
@@ -171,10 +204,6 @@ impl AvFormatContext {
 impl AvFormatContext {
     fn alloc_context() -> Pointer {
         unsafe { generated::avformat_alloc_context() }
-    }
-
-    fn free_context(avformat_context: Pointer) -> () {
-        unsafe { generated::avformat_free_context(avformat_context) }
     }
 }
 

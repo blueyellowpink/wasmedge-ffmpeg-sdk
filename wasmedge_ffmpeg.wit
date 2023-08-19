@@ -10,6 +10,7 @@ avformat-get-stream: func(avformat-context: Pointer, index: u32) -> Pointer
 avformat-alloc-output-context2: func(avformat-context: Pointer, filename: string) -> Pointer
 avformat-new-stream: func(avformat-context: Pointer) -> Pointer
 avformat-write-header: func(avformat-context: Pointer) -> u32
+avformat-close-input: func(avformat-context: Pointer) -> unit
 
 avstream-codecpar: func(avstream: Pointer) -> Pointer
 
@@ -21,7 +22,10 @@ av-read-frame: func(avformat-context: Pointer, avpacket: Pointer) -> u32
 av-packet: func() -> Pointer
 av-packet-unref: func(avpacket: Pointer) -> unit
 av-packet-stream-index: func(avpacket: Pointer) -> u32
+av-interleaved-write-frame: func(avformat-context: Pointer, avpacket: Pointer) -> u32
+av-write-trailer: func(avformat-context: Pointer) -> u32
 
 copy-packet: func(input-avformat-context: Pointer, output-avformat-context: Pointer, avpacket: Pointer, streams-list-index: u32) -> unit
 
 avio-open: func(avformat-context: Pointer, filename: string) -> u32
+avio-closep: func(avformat-context: Pointer) -> unit

@@ -5,8 +5,8 @@ fn main() {
     let mut input_context = AvFormatContext::new();
     let mut output_context = AvFormatContext::new();
 
-    let in_filename = "./small_bunny_1080p_60fps.mp4";
-    let out_filename = "./small_bunny_1080p_60fps.ts";
+    let in_filename = "./test_video.mp4";
+    let out_filename = "./test_video.ts";
 
     avformat_open_input(&mut input_context, in_filename).unwrap();
     avformat_find_stream_info(&mut input_context).unwrap();
@@ -39,11 +39,9 @@ fn main() {
     avformat_write_header(&mut output_context).unwrap();
 
     let packet = AvPacket::new();
-    // loop {
-
-    for _ in 0..10 {
+    loop {
         if av_read_frame(&input_context, &packet).is_err() {
-            println!("ERROR read frame");
+            break;
         }
         let packet_stream_index = packet.stream_index();
         if packet_stream_index >= nb_streams as usize || streams_list[packet_stream_index] < 0 {
@@ -56,9 +54,15 @@ fn main() {
             &packet,
             streams_list[packet_stream_index] as usize,
         );
-
+        if av_interleaved_write_frame(&output_context, &packet).is_err() {
+            break;
+        }
         av_packet_unref(&packet);
     }
+    av_write_trailer(&output_context).unwrap();
 
-    // }
+    // clean up
+    avformat_close_input(&input_context);
+    avio_closep(&output_context);
+    avformat_free_context(&output_context);
 }

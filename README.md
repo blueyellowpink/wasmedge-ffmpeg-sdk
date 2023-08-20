@@ -1,16 +1,32 @@
-# WasmEdge FFMPEG plugin SDK
+# WasmEdge FFMPEG Plugin SDK
 - `src/lib.rs`: contains all wrapper functions and structs for FFMPEG C-API
 - `src/main.rs`: a simple app converts MP4 to TS
 - `wasmedge_ffmpeg.wit`: WIT file
 
 ## Installation
-
-### WasmEdge FFMPEG Plugin
-- Build `WasmEdge` with `FFMPEG` plugin enabled.
+### 1. Install FFMPEG
 ```bash
+git clone https://github.com/FFmpeg/FFmpeg --depth 1 && cd FFmpeg
+./configure --prefix=$HOME/.ffmpeg/ --enable-gpl --enable-nonfree --disable-static --enable-shared
+sudo make install
+```
+
+### 2. Install LLVM & CMake
+- MacOS
+```bash
+brew install cmake ninja llvm
+
 export LLVM_DIR=$(brew --prefix)/opt/llvm/lib/cmake
 export CC=$(brew --prefix)/opt/llvm/bin/clang
 export CXX=$(brew --prefix)/opt/llvm/bin/clang++
+```
+
+- Ubuntu 20.04
+
+### 2. WasmEdge FFMPEG Plugin
+- Build `WasmEdge` with `FFMPEG` plugin enabled.
+```bash
+git clone https://github.com/blueyellowpink/wasmedge-ffmpeg && cd wasmedge-ffmpeg
 
 cmake -Bbuild \
       -GNinja \
@@ -28,9 +44,10 @@ cmake --build build
 sudo cmake --install build --prefix /usr/local
 ```
 
-### WasmEdge FFMPEG SDK
+### 3. WasmEdge FFMPEG SDK
 - Compile as `wasm32-wasi` target
 ```bash
+git clone https://github.com/blueyellowpink/wasmedge-ffmpeg-sdk && cd wasmedge-ffmpeg-sdk
 cargo build --target wasm32-wasi --release
 ```
 

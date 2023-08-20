@@ -2,4 +2,4 @@
 /Cargo.lock
 
 *.wasm
-*.mp4
+*.ts

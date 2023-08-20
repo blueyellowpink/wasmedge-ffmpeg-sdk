@@ -4,6 +4,8 @@ use std::path::Path;
 use std::process::Command;
 
 fn main() {
+    println!("cargo:rerun-if-changed=build.rs");
+
     let out_dir = env::var_os("OUT_DIR").unwrap();
     let dest_path = Path::new(&out_dir).join("generated.rs");
 
@@ -16,6 +18,4 @@ fn main() {
     println!("status: {}", output.status);
 
     fs::write(&dest_path, String::from_utf8_lossy(&output.stdout).as_ref()).unwrap();
-
-    println!("cargo:rerun-if-changed=build.rs");
 }

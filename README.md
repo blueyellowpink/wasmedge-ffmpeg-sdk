@@ -44,7 +44,10 @@ cmake --build build
 sudo cmake --install build --prefix /usr/local
 ```
 
-### 3. WasmEdge FFMPEG SDK
+### 3. Install Witc
+- https://github.com/second-state/witc
+
+### 4. WasmEdge FFMPEG SDK
 - Compile as `wasm32-wasi` target
 ```bash
 git clone https://github.com/blueyellowpink/wasmedge-ffmpeg-sdk && cd wasmedge-ffmpeg-sdk
